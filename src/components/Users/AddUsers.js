@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Card from "../UI/Card";
 import classes from "./AddUser.module.css"
 import Button from "../UI/Button";
@@ -8,6 +8,7 @@ const AddUser = props => {
     const [enteredName, setEnteredName] = useState('')
     const [enteredAge, setEnteredAge] = useState('')
     const [error, setError] = useState()
+    const collegeNameInputRef = useRef()
 
     const addUserHandler = (event) => {
         event.preventDefault()
@@ -25,9 +26,10 @@ const AddUser = props => {
             })
             return
         }
-        props.onAddUser(enteredName, enteredAge)
+        props.onAddUser(enteredName, enteredAge, collegeNameInputRef.current.value)
         setEnteredName('')
         setEnteredAge('')
+        collegeNameInputRef.current.value = ''
     }
 
     const nameChangeHandler = (event) => {
@@ -44,13 +46,15 @@ const AddUser = props => {
 
     return (
         <div>
-            {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler}/>}
+            {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
             <Card className={classes.input}>
                 <form onSubmit={addUserHandler}>
                     <label htmlFor="username">Username</label>
                     <input id="username" type="text" value={enteredName} onChange={nameChangeHandler}></input>
                     <label htmlFor="age">Age (Years)</label>
                     <input id="age" type="number" value={enteredAge} onChange={ageChangeHandler}></input>
+                    <label htmlFor="collegename">College name</label>
+                    <input id="collegename" type="text" ref={collegeNameInputRef}></input>
                     <Button type="submit">Add User</Button>
                 </form>
             </Card>
